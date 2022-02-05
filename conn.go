@@ -7,37 +7,29 @@ import (
 	"strings"
 )
 
-const bufferSize = 1024
-
-func comunicate(conn *net.TCPConn) {
-	defer conn.Close()
+func handleConn(conn *net.TCPConn) {
 	defer handleConnClose(conn)
 
 	for {
-		buffer, err := read1k(conn)
+		cmd, err := getRedisClientCmd(conn)
 		if err != nil {
 			return
 		}
 
-		rawCMDStrs := cmdStrs(buffer)
-		clientCMD, err := parseCmd(rawCMDStrs)
-		if err != nil {
-			log.Printf("failed to parse \"%+v\"", rawCMDStrs)
-			return
-		}
-
-		cmdStr := clientCMD.Cmd
-		if len(clientCMD.Args) > 0 {
-			cmdStr += " " + strings.Join(clientCMD.Args, " ")
+		cmdStr := cmd.Cmd
+		if len(cmd.Args) > 0 {
+			cmdStr += " " + strings.Join(cmd.Args, " ")
 		}
 		log.Printf("received command \"%s\" from %s", cmdStr, conn.RemoteAddr().String())
 
-		if _, err := io.WriteString(conn, "+PONG\r\n"); err != nil {
+		res := handleRedisCommand(cmd)
+		if _, err := io.WriteString(conn, res); err != nil {
 			return
 		}
 	}
 }
 
 func handleConnClose(conn *net.TCPConn) {
+	conn.Close()
 	log.Printf("connection from %s closed\n", conn.RemoteAddr().String())
 }

@@ -13,6 +13,6 @@ func startServer(listener *net.TCPListener) {
 		}
 		log.Printf("connection establised from %s\n", conn.RemoteAddr().String())
 
-		go comunicate(conn)
+		go handleConn(conn)
 	}
 }

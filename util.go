@@ -2,11 +2,16 @@ package main
 
 import (
 	"bufio"
-	"io"
+	"net"
 )
 
-func read1k(rd io.Reader) ([]byte, error) {
+const bufferSize = 1024
+
+func readTCPPayload(conn *net.TCPConn) ([]byte, error) {
 	buffer := make([]byte, bufferSize)
-	_, err := bufio.NewReader(rd).Read(buffer)
-	return buffer, err
+	_, err := bufio.NewReader(conn).Read(buffer)
+	if err != nil {
+		return nil, err
+	}
+	return buffer, nil
 }

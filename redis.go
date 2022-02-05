@@ -1,36 +1,40 @@
 package main
 
 import (
-	"strconv"
+	"fmt"
+	"net"
 	"strings"
 )
 
-type ClientCommand struct {
+type RedisCommand struct {
 	Length int
 	Cmd    string
 	Args   []string
 }
 
-func cmdStrs(buffer []byte) []string {
-	cmdStr := string(buffer)
-	strs := strings.Split(cmdStr, "\r\n")
-	strs = strs[:len(strs)-1]
-	return strs
-}
-
-func parseCmd(strs []string) (*ClientCommand, error) {
-	length, err := strconv.Atoi(strs[0][1:])
+func getRedisClientCmd(conn *net.TCPConn) (*RedisCommand, error) {
+	buffer, err := readTCPPayload(conn)
 	if err != nil {
 		return nil, err
 	}
-	cmd := ClientCommand{}
-	if length <= 0 {
-		return &cmd, nil
+	strs := parseRedisRawClientCmd2Strs(buffer)
+	return parseRedisClientCmd(strs)
+}
+
+func handleRedisCommand(cmd *RedisCommand) string {
+	switch cmd.Cmd {
+	case "COMMAND":
+		return redisCOMMAND()
+	case "PING":
+		return redisPING()
+	case "KEYS":
+		return redisKEYS()
+	case "SET":
+		return redisSET(cmd.Args)
+	case "GET":
+		return redisGET(cmd.Args[0])
+	case "DEL":
+		return redisDEL(cmd.Args[0])
 	}
-	cmd.Length = length
-	cmd.Cmd = strings.ToUpper(strs[2])
-	for i := 3; i < len(strs); i = i + 2 {
-		cmd.Args = append(cmd.Args, strs[i+1])
-	}
-	return &cmd, nil
+	return fmt.Sprintf("-ERR unknown command `%s`, with args beginning with: %s", cmd.Cmd, strings.Join(cmd.Args, " "))
 }
