@@ -9,6 +9,13 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	version = "unknown"
+	commit  = "unknown"
+	date    = "unknown"
+	builtBy = "unknown"
+)
+
 func main() {
 	var confName string
 	flag.StringVar(&confName, "conf", "", "config file path")
