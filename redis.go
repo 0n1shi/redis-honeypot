@@ -10,6 +10,15 @@ type RedisCommand struct {
 	Length int
 	Cmd    string
 	Args   []string
+	Addr   string
+}
+
+func (c *RedisCommand) ToString() string {
+	str := c.Cmd
+	if len(c.Args) > 0 {
+		str += " " + strings.Join(c.Args, " ")
+	}
+	return str
 }
 
 func getRedisClientCmd(conn *net.TCPConn) (*RedisCommand, error) {
@@ -18,10 +27,15 @@ func getRedisClientCmd(conn *net.TCPConn) (*RedisCommand, error) {
 		return nil, err
 	}
 	strs := parseRedisRawClientCmd2Strs(buffer)
-	return parseRedisClientCmd(strs)
+	cmd, err := parseRedisClientCmd(strs)
+	if err != nil {
+		return nil, err
+	}
+	cmd.Addr = conn.RemoteAddr().String()
+	return cmd, nil
 }
 
-func handleRedisCommand(cmd *RedisCommand) string {
+func handleRedisCmd(cmd *RedisCommand) string {
 	switch cmd.Cmd {
 	case "COMMAND":
 		return redisCOMMAND()

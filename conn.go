@@ -4,10 +4,11 @@ import (
 	"io"
 	"log"
 	"net"
-	"strings"
+
+	"gorm.io/gorm"
 )
 
-func handleConn(conn *net.TCPConn) {
+func handleConn(conn *net.TCPConn, db *gorm.DB) {
 	defer handleConnClose(conn)
 
 	for {
@@ -16,13 +17,12 @@ func handleConn(conn *net.TCPConn) {
 			return
 		}
 
-		cmdStr := cmd.Cmd
-		if len(cmd.Args) > 0 {
-			cmdStr += " " + strings.Join(cmd.Args, " ")
+		log.Printf("received command \"%s\" from %s", cmd.ToString(), cmd.Addr)
+		if db.Create(toMySQLRecord(cmd)).Error != nil {
+			return
 		}
-		log.Printf("received command \"%s\" from %s", cmdStr, conn.RemoteAddr().String())
 
-		res := handleRedisCommand(cmd)
+		res := handleRedisCmd(cmd)
 		if _, err := io.WriteString(conn, res); err != nil {
 			return
 		}

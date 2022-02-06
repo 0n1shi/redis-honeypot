@@ -1,31 +1,43 @@
 package main
 
 import (
+	"flag"
+	"fmt"
+	"io/ioutil"
 	"log"
-	"net"
-	"os"
-)
 
-const (
-	proto = "tcp"
+	"gopkg.in/yaml.v2"
 )
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "6379"
-	}
+	var confName string
+	flag.StringVar(&confName, "conf", "", "config file path")
+	flag.Parse()
 
-	tcpAddr, err := net.ResolveTCPAddr(proto, ":"+port)
+	conf, err := getConf(confName)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	listener, err := net.ListenTCP(proto, tcpAddr)
+	db, err := initMySQL(&conf.MySQL)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	log.Println("starting Beehive Redis server ...")
-	startServer(listener)
+	startServer(fmt.Sprintf(":%d", conf.Redis.Port), db)
+}
+
+func getConf(filename string) (*Conf, error) {
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var conf Conf
+	if err := yaml.Unmarshal(data, &conf); err != nil {
+		log.Fatal(err)
+	}
+
+	return &conf, nil
 }
