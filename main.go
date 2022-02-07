@@ -9,7 +9,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const (
+var (
 	version = "unknown"
 	commit  = "unknown"
 	date    = "unknown"
@@ -24,7 +24,7 @@ func main() {
 	flag.Parse()
 
 	if showVersion {
-		fmt.Printf("version: %s", version)
+		fmt.Printf("version: %s\n", version)
 		return
 	}
 
