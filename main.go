@@ -18,8 +18,15 @@ const (
 
 func main() {
 	var confName string
+	var showVersion bool
+	flag.BoolVar(&showVersion, "ver", false, "show version")
 	flag.StringVar(&confName, "conf", "", "config file path")
 	flag.Parse()
+
+	if showVersion {
+		fmt.Printf("version: %s", version)
+		return
+	}
 
 	conf, err := getConf(confName)
 	if err != nil {
