@@ -51,6 +51,8 @@ func handleRedisCmd(cmd *RedisCommand) string {
 		return redisDEL(cmd.Args[0])
 	case "INFO":
 		return redisINFO()
+	case "CONFIG":
+		return redisCONFIG()
 	}
 	return fmt.Sprintf("-ERR unknown command `%s`, with args beginning with: %s", cmd.Cmd, strings.Join(cmd.Args, " "))
 }
