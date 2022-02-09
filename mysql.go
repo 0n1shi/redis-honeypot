@@ -10,10 +10,11 @@ import (
 
 type MySQLRedisCommand struct {
 	gorm.Model
-	Length int
-	Cmd    string
-	Args   string
-	Addr   string
+	Length      int
+	Cmd         string
+	Args        string
+	Addr        string
+	Implemented bool
 }
 
 func (c *MySQLRedisCommand) TableName() string {
@@ -38,9 +39,10 @@ func initMySQL(conf *MySQLConf) (*gorm.DB, error) {
 
 func toMySQLRecord(cmd *RedisCommand) *MySQLRedisCommand {
 	return &MySQLRedisCommand{
-		Length: cmd.Length,
-		Cmd:    cmd.Cmd,
-		Args:   strings.Join(cmd.Args, " "),
-		Addr:   cmd.Addr,
+		Length:      cmd.Length,
+		Cmd:         string(cmd.Cmd),
+		Args:        strings.Join(cmd.Args, " "),
+		Addr:        cmd.Addr,
+		Implemented: cmd.Implemented,
 	}
 }

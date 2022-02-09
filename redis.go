@@ -6,15 +6,49 @@ import (
 	"strings"
 )
 
+type RedisCmdType string
+
+const (
+	RedisCmdCOMMAND RedisCmdType = "COMMAND"
+	RedisCmdPING    RedisCmdType = "PING"
+	RedisCmdKEYS    RedisCmdType = "KEYS"
+	RedisCmdSET     RedisCmdType = "SET"
+	RedisCmdGET     RedisCmdType = "GET"
+	RedisCmdDEL     RedisCmdType = "DEL"
+	RedisCmdINFO    RedisCmdType = "INFO"
+	RedisCmdCONFIG  RedisCmdType = "CONFIG"
+)
+
+var implemenetedCMDs = []RedisCmdType{
+	RedisCmdCOMMAND,
+	RedisCmdPING,
+	RedisCmdKEYS,
+	RedisCmdSET,
+	RedisCmdGET,
+	RedisCmdDEL,
+	RedisCmdINFO,
+	RedisCmdCONFIG,
+}
+
+func IsImplemented(cmd RedisCmdType) bool {
+	for _, c := range implemenetedCMDs {
+		if c == cmd {
+			return true
+		}
+	}
+	return false
+}
+
 type RedisCommand struct {
-	Length int
-	Cmd    string
-	Args   []string
-	Addr   string
+	Length      int
+	Cmd         RedisCmdType
+	Args        []string
+	Addr        string
+	Implemented bool
 }
 
 func (c *RedisCommand) ToString() string {
-	str := c.Cmd
+	str := string(c.Cmd)
 	if len(c.Args) > 0 {
 		str += " " + strings.Join(c.Args, " ")
 	}
@@ -32,26 +66,27 @@ func getRedisClientCmd(conn *net.TCPConn) (*RedisCommand, error) {
 		return nil, err
 	}
 	cmd.Addr = conn.RemoteAddr().String()
+	cmd.Implemented = IsImplemented(cmd.Cmd)
 	return cmd, nil
 }
 
 func handleRedisCmd(cmd *RedisCommand) string {
 	switch cmd.Cmd {
-	case "COMMAND":
+	case RedisCmdCOMMAND:
 		return redisCOMMAND()
-	case "PING":
+	case RedisCmdPING:
 		return redisPING()
-	case "KEYS":
+	case RedisCmdKEYS:
 		return redisKEYS()
-	case "SET":
+	case RedisCmdSET:
 		return redisSET(cmd.Args)
-	case "GET":
+	case RedisCmdGET:
 		return redisGET(cmd.Args[0])
-	case "DEL":
+	case RedisCmdDEL:
 		return redisDEL(cmd.Args[0])
-	case "INFO":
+	case RedisCmdINFO:
 		return redisINFO()
-	case "CONFIG":
+	case RedisCmdCONFIG:
 		return redisCONFIG()
 	}
 	return fmt.Sprintf("-ERR unknown command `%s`, with args beginning with: %s", cmd.Cmd, strings.Join(cmd.Args, " "))

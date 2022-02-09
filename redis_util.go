@@ -22,7 +22,7 @@ func parseRedisClientCmd(strs []string) (*RedisCommand, error) {
 		return &cmd, nil
 	}
 	cmd.Length = length
-	cmd.Cmd = strings.ToUpper(strs[2])
+	cmd.Cmd = RedisCmdType(strings.ToUpper(strs[2]))
 	for i := 3; i < len(strs); i = i + 2 {
 		cmd.Args = append(cmd.Args, strs[i+1])
 	}
