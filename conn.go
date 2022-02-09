@@ -14,17 +14,20 @@ func handleConn(conn *net.TCPConn, db *gorm.DB) {
 	for {
 		cmd, err := getRedisClientCmd(conn)
 		if err != nil {
-			return
+			log.Println(err)
+			break
 		}
 
 		log.Printf("received command \"%s\" from %s", cmd.ToString(), cmd.Addr)
 		if db.Create(toMySQLRecord(cmd)).Error != nil {
-			return
+			log.Println(err)
+			break
 		}
 
 		res := handleRedisCmd(cmd)
 		if _, err := io.WriteString(conn, res); err != nil {
-			return
+			log.Println(err)
+			break
 		}
 	}
 }
