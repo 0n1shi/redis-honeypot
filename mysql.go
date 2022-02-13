@@ -13,7 +13,7 @@ type MySQLRedisCommand struct {
 	Length      int
 	Cmd         string
 	Args        string
-	Addr        string
+	IP          string
 	Implemented bool
 }
 
@@ -42,7 +42,7 @@ func toMySQLRecord(cmd *RedisCommand) *MySQLRedisCommand {
 		Length:      cmd.Length,
 		Cmd:         string(cmd.Cmd),
 		Args:        strings.Join(cmd.Args, " "),
-		Addr:        cmd.Addr,
+		IP:          cmd.IP,
 		Implemented: cmd.Implemented,
 	}
 }

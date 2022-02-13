@@ -18,7 +18,7 @@ func handleConn(conn *net.TCPConn, db *gorm.DB) {
 			break
 		}
 
-		log.Printf("received command \"%s\" from %s", cmd.ToString(), cmd.Addr)
+		log.Printf("received command \"%s\" from %s", cmd.ToString(), cmd.IP)
 		if db.Create(toMySQLRecord(cmd)).Error != nil {
 			log.Println(err)
 			break
