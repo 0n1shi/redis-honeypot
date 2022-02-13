@@ -13,7 +13,7 @@ type MySQLRedisCommand struct {
 	Length int
 	Cmd    string
 	Args   string
-	Addr   string
+	IP     string
 }
 
 func (c *MySQLRedisCommand) TableName() string {
@@ -41,6 +41,6 @@ func toMySQLRecord(cmd *RedisCommand) *MySQLRedisCommand {
 		Length: cmd.Length,
 		Cmd:    cmd.Cmd,
 		Args:   strings.Join(cmd.Args, " "),
-		Addr:   cmd.Addr,
+		IP:     cmd.IP,
 	}
 }

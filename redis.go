@@ -10,7 +10,7 @@ type RedisCommand struct {
 	Length int
 	Cmd    string
 	Args   []string
-	Addr   string
+	IP     string
 }
 
 func (c *RedisCommand) ToString() string {
@@ -31,7 +31,8 @@ func getRedisClientCmd(conn *net.TCPConn) (*RedisCommand, error) {
 	if err != nil {
 		return nil, err
 	}
-	cmd.Addr = conn.RemoteAddr().String()
+
+	cmd.IP = strings.Split(conn.RemoteAddr().String(), ":")[0]
 	return cmd, nil
 }
 
