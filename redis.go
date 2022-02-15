@@ -17,6 +17,7 @@ const (
 	RedisCmdDEL     RedisCmdType = "DEL"
 	RedisCmdINFO    RedisCmdType = "INFO"
 	RedisCmdCONFIG  RedisCmdType = "CONFIG"
+	RedisCmdSAVE    RedisCmdType = "SAVE"
 )
 
 var implemenetedCMDs = []RedisCmdType{
@@ -88,6 +89,8 @@ func handleRedisCmd(cmd *RedisCommand) string {
 		return redisINFO()
 	case RedisCmdCONFIG:
 		return redisCONFIG()
+	case RedisCmdSAVE:
+		return redisSAVE()
 	}
 	return fmt.Sprintf("-ERR unknown command `%s`, with args beginning with: %s", cmd.Cmd, strings.Join(cmd.Args, " "))
 }

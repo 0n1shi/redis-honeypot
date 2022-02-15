@@ -571,3 +571,7 @@ func redisCONFIG() string {
 	}
 	return toRedisStrArray(configs)
 }
+
+func redisSAVE() string {
+	return redisMsgOK
+}
