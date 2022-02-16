@@ -13,6 +13,7 @@ builds:
       - linux
     goarch:
       - amd64
+    main: ./cmd/server
 archives:
   - replacements:
       linux: Linux
