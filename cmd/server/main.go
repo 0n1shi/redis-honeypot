@@ -23,10 +23,6 @@ func main() {
 	app := &cli.App{
 		Name:  "Redis server of Beehive honeypot series",
 		Usage: "TCP server which communicate in Redis protocol.",
-		Action: func(c *cli.Context) error {
-			fmt.Println("boom! I say!")
-			return nil
-		},
 		Commands: []cli.Command{
 			{
 				Name:   "version",
