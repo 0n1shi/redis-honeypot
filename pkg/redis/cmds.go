@@ -12,15 +12,15 @@ const (
 
 var redisDataMap = map[string]string{}
 
-func redisCOMMAND() string {
+func redisCOMMAND(args []string) string {
 	return ResMsgOK
 }
 
-func redisPING() string {
+func redisPING(args []string) string {
 	return "+PONG" + ResNewLine
 }
 
-func redisKEYS() string { // TODO: return keys
+func redisKEYS(args []string) string {
 	keys := []string{}
 	for k := range redisDataMap {
 		keys = append(keys, k)
@@ -28,27 +28,27 @@ func redisKEYS() string { // TODO: return keys
 	return toRedisStrArray(keys)
 }
 
-func redisSET(key_value []string) string {
-	redisDataMap[key_value[0]] = key_value[1]
+func redisSET(args []string) string {
+	redisDataMap[args[0]] = args[1]
 	return ResMsgOK
 }
 
-func redisGET(key string) string {
-	if val, ok := redisDataMap[key]; ok {
+func redisGET(args []string) string {
+	if val, ok := redisDataMap[args[0]]; ok {
 		return toRedisStr(val)
 	}
 	return ResNil
 }
 
-func redisDEL(key string) string {
-	if _, ok := redisDataMap[key]; !ok {
+func redisDEL(args []string) string {
+	if _, ok := redisDataMap[args[0]]; !ok {
 		return ResMsgFailure
 	}
-	delete(redisDataMap, key)
+	delete(redisDataMap, args[0])
 	return ResMsgSuccess
 }
 
-func redisINFO() string {
+func redisINFO(args []string) string {
 	msgs := []string{
 		"# Server",
 		"redis_version:6.2.6",
@@ -230,7 +230,7 @@ func redisINFO() string {
 	return toRedisStr(strings.Join(msgs, "\r\n"))
 }
 
-func redisCONFIG() string {
+func redisCONFIG(args []string) string {
 	configs := []string{
 		"rdbchecksum",
 		"yes",
@@ -572,6 +572,10 @@ func redisCONFIG() string {
 	return toRedisStrArray(configs)
 }
 
-func redisSAVE() string {
+func redisSAVE(args []string) string {
+	return ResMsgOK
+}
+
+func redisQUIT(args []string) string {
 	return ResMsgOK
 }

@@ -6,43 +6,40 @@ import (
 	"strings"
 )
 
-type RedisCmd string
-
 const (
-	CmdCOMMAND RedisCmd = "COMMAND"
-	CmdPING    RedisCmd = "PING"
-	CmdKEYS    RedisCmd = "KEYS"
-	CmdSET     RedisCmd = "SET"
-	CmdGET     RedisCmd = "GET"
-	CmdDEL     RedisCmd = "DEL"
-	CmdINFO    RedisCmd = "INFO"
-	CmdCONFIG  RedisCmd = "CONFIG"
-	CmdSAVE    RedisCmd = "SAVE"
+	CmdCOMMAND = "COMMAND"
+	CmdPING    = "PING"
+	CmdKEYS    = "KEYS"
+	CmdSET     = "SET"
+	CmdGET     = "GET"
+	CmdDEL     = "DEL"
+	CmdINFO    = "INFO"
+	CmdCONFIG  = "CONFIG"
+	CmdSAVE    = "SAVE"
+	CmdQUIT    = "QUIT"
 )
 
-var implemenetedCMDs = []RedisCmd{
-	CmdCOMMAND,
-	CmdPING,
-	CmdKEYS,
-	CmdSET,
-	CmdGET,
-	CmdDEL,
-	CmdINFO,
-	CmdCONFIG,
+var implemenetedCmds = map[string](func(args []string) string){
+	CmdCOMMAND: redisCOMMAND,
+	CmdPING:    redisPING,
+	CmdKEYS:    redisKEYS,
+	CmdSET:     redisSET,
+	CmdGET:     redisGET,
+	CmdDEL:     redisDEL,
+	CmdINFO:    redisINFO,
+	CmdCONFIG:  redisCONFIG,
+	CmdSAVE:    redisSAVE,
+	CmdQUIT:    redisQUIT,
 }
 
-func IsImplemented(cmd RedisCmd) bool {
-	for _, c := range implemenetedCMDs {
-		if c == cmd {
-			return true
-		}
-	}
-	return false
+func IsImplemented(cmd string) bool {
+	_, ok := implemenetedCmds[cmd]
+	return ok
 }
 
 type Command struct {
 	Length      int
-	Cmd         RedisCmd
+	Cmd         string
 	Args        []string
 	IP          string
 	Implemented bool
@@ -61,8 +58,8 @@ func getCmd(conn *net.TCPConn) (*Command, error) {
 	if err != nil {
 		return nil, err
 	}
-	strs := parseRedisRawClientCmd2Strs(buffer)
-	cmd, err := parseRedisClientCmd(strs)
+	strs := parseRawCmdToStrs(buffer)
+	cmd, err := parseStrsToClientCmd(strs)
 	if err != nil {
 		return nil, err
 	}
@@ -72,25 +69,8 @@ func getCmd(conn *net.TCPConn) (*Command, error) {
 }
 
 func makeResStr(cmd *Command) string {
-	switch cmd.Cmd {
-	case CmdCOMMAND:
-		return redisCOMMAND()
-	case CmdPING:
-		return redisPING()
-	case CmdKEYS:
-		return redisKEYS()
-	case CmdSET:
-		return redisSET(cmd.Args)
-	case CmdGET:
-		return redisGET(cmd.Args[0])
-	case CmdDEL:
-		return redisDEL(cmd.Args[0])
-	case CmdINFO:
-		return redisINFO()
-	case CmdCONFIG:
-		return redisCONFIG()
-	case CmdSAVE:
-		return redisSAVE()
+	if function, ok := implemenetedCmds[cmd.Cmd]; ok {
+		return function(cmd.Args)
 	}
-	return fmt.Sprintf("-ERR unknown command `%s`, with args beginning with: %s", cmd.Cmd, strings.Join(cmd.Args, " "))
+	return fmt.Sprintf("-ERR unknown command `%s`, with args beginning with: %s%s", cmd.Cmd, strings.Join(cmd.Args, " "), ResNewLine)
 }

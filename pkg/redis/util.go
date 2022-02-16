@@ -19,13 +19,13 @@ func readTCPPayload(conn *net.TCPConn) ([]byte, error) {
 	return buffer, nil
 }
 
-func parseRedisRawClientCmd2Strs(buffer []byte) []string {
+func parseRawCmdToStrs(buffer []byte) []string {
 	cmdStr := string(buffer)
 	strs := strings.Split(cmdStr, "\r\n")
 	return strs[:len(strs)-1]
 }
 
-func parseRedisClientCmd(strs []string) (*Command, error) {
+func parseStrsToClientCmd(strs []string) (*Command, error) {
 	length, err := strconv.Atoi(strs[0][1:])
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func parseRedisClientCmd(strs []string) (*Command, error) {
 		return &cmd, nil
 	}
 	cmd.Length = length
-	cmd.Cmd = RedisCmd(strings.ToUpper(strs[2]))
+	cmd.Cmd = strings.ToUpper(strs[2])
 	for i := 3; i < len(strs); i = i + 2 {
 		cmd.Args = append(cmd.Args, strs[i+1])
 	}
