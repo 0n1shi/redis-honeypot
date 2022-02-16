@@ -1,4 +1,4 @@
-package main
+package redis
 
 import (
 	"fmt"
@@ -6,32 +6,32 @@ import (
 	"strings"
 )
 
-type RedisCmdType string
+type RedisCmd string
 
 const (
-	RedisCmdCOMMAND RedisCmdType = "COMMAND"
-	RedisCmdPING    RedisCmdType = "PING"
-	RedisCmdKEYS    RedisCmdType = "KEYS"
-	RedisCmdSET     RedisCmdType = "SET"
-	RedisCmdGET     RedisCmdType = "GET"
-	RedisCmdDEL     RedisCmdType = "DEL"
-	RedisCmdINFO    RedisCmdType = "INFO"
-	RedisCmdCONFIG  RedisCmdType = "CONFIG"
-	RedisCmdSAVE    RedisCmdType = "SAVE"
+	CmdCOMMAND RedisCmd = "COMMAND"
+	CmdPING    RedisCmd = "PING"
+	CmdKEYS    RedisCmd = "KEYS"
+	CmdSET     RedisCmd = "SET"
+	CmdGET     RedisCmd = "GET"
+	CmdDEL     RedisCmd = "DEL"
+	CmdINFO    RedisCmd = "INFO"
+	CmdCONFIG  RedisCmd = "CONFIG"
+	CmdSAVE    RedisCmd = "SAVE"
 )
 
-var implemenetedCMDs = []RedisCmdType{
-	RedisCmdCOMMAND,
-	RedisCmdPING,
-	RedisCmdKEYS,
-	RedisCmdSET,
-	RedisCmdGET,
-	RedisCmdDEL,
-	RedisCmdINFO,
-	RedisCmdCONFIG,
+var implemenetedCMDs = []RedisCmd{
+	CmdCOMMAND,
+	CmdPING,
+	CmdKEYS,
+	CmdSET,
+	CmdGET,
+	CmdDEL,
+	CmdINFO,
+	CmdCONFIG,
 }
 
-func IsImplemented(cmd RedisCmdType) bool {
+func IsImplemented(cmd RedisCmd) bool {
 	for _, c := range implemenetedCMDs {
 		if c == cmd {
 			return true
@@ -40,15 +40,15 @@ func IsImplemented(cmd RedisCmdType) bool {
 	return false
 }
 
-type RedisCommand struct {
+type Command struct {
 	Length      int
-	Cmd         RedisCmdType
+	Cmd         RedisCmd
 	Args        []string
 	IP          string
 	Implemented bool
 }
 
-func (c *RedisCommand) ToString() string {
+func (c *Command) ToString() string {
 	str := string(c.Cmd)
 	if len(c.Args) > 0 {
 		str += " " + strings.Join(c.Args, " ")
@@ -56,7 +56,7 @@ func (c *RedisCommand) ToString() string {
 	return str
 }
 
-func getRedisClientCmd(conn *net.TCPConn) (*RedisCommand, error) {
+func getCmd(conn *net.TCPConn) (*Command, error) {
 	buffer, err := readTCPPayload(conn)
 	if err != nil {
 		return nil, err
@@ -71,25 +71,25 @@ func getRedisClientCmd(conn *net.TCPConn) (*RedisCommand, error) {
 	return cmd, nil
 }
 
-func handleRedisCmd(cmd *RedisCommand) string {
+func makeResStr(cmd *Command) string {
 	switch cmd.Cmd {
-	case RedisCmdCOMMAND:
+	case CmdCOMMAND:
 		return redisCOMMAND()
-	case RedisCmdPING:
+	case CmdPING:
 		return redisPING()
-	case RedisCmdKEYS:
+	case CmdKEYS:
 		return redisKEYS()
-	case RedisCmdSET:
+	case CmdSET:
 		return redisSET(cmd.Args)
-	case RedisCmdGET:
+	case CmdGET:
 		return redisGET(cmd.Args[0])
-	case RedisCmdDEL:
+	case CmdDEL:
 		return redisDEL(cmd.Args[0])
-	case RedisCmdINFO:
+	case CmdINFO:
 		return redisINFO()
-	case RedisCmdCONFIG:
+	case CmdCONFIG:
 		return redisCONFIG()
-	case RedisCmdSAVE:
+	case CmdSAVE:
 		return redisSAVE()
 	}
 	return fmt.Sprintf("-ERR unknown command `%s`, with args beginning with: %s", cmd.Cmd, strings.Join(cmd.Args, " "))

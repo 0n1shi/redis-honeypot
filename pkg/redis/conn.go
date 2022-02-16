@@ -1,30 +1,29 @@
-package main
+package redis
 
 import (
 	"io"
 	"log"
 	"net"
-
-	"gorm.io/gorm"
 )
 
-func handleConn(conn *net.TCPConn, db *gorm.DB) {
+func handleConn(conn *net.TCPConn, repo Repository) {
+	log.Printf("repo: %+v\n", repo)
 	defer handleConnClose(conn)
 
 	for {
-		cmd, err := getRedisClientCmd(conn)
+		cmd, err := getCmd(conn)
 		if err != nil {
 			log.Println(err)
 			break
 		}
 
 		log.Printf("received command \"%s\" from %s", cmd.ToString(), cmd.IP)
-		if db.Create(toMySQLRecord(cmd)).Error != nil {
+		if err := repo.Save(cmd); err != nil {
 			log.Println(err)
 			break
 		}
 
-		res := handleRedisCmd(cmd)
+		res := makeResStr(cmd)
 		if _, err := io.WriteString(conn, res); err != nil {
 			log.Println(err)
 			break

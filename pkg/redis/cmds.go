@@ -1,23 +1,23 @@
-package main
+package redis
 
 import "strings"
 
 const (
-	redisNewLine    = "\r\n"
-	redisNil        = "$-1" + redisNewLine
-	redisMsgOK      = "+OK" + redisNewLine
-	redisMsgSuccess = ":1" + redisNewLine
-	redisMsgFailure = ":0" + redisNewLine
+	ResNewLine    = "\r\n"
+	ResNil        = "$-1" + ResNewLine
+	ResMsgOK      = "+OK" + ResNewLine
+	ResMsgSuccess = ":1" + ResNewLine
+	ResMsgFailure = ":0" + ResNewLine
 )
 
 var redisDataMap = map[string]string{}
 
 func redisCOMMAND() string {
-	return redisMsgOK
+	return ResMsgOK
 }
 
 func redisPING() string {
-	return "+PONG" + redisNewLine
+	return "+PONG" + ResNewLine
 }
 
 func redisKEYS() string { // TODO: return keys
@@ -30,22 +30,22 @@ func redisKEYS() string { // TODO: return keys
 
 func redisSET(key_value []string) string {
 	redisDataMap[key_value[0]] = key_value[1]
-	return redisMsgOK
+	return ResMsgOK
 }
 
 func redisGET(key string) string {
 	if val, ok := redisDataMap[key]; ok {
 		return toRedisStr(val)
 	}
-	return redisNil
+	return ResNil
 }
 
 func redisDEL(key string) string {
 	if _, ok := redisDataMap[key]; !ok {
-		return redisMsgFailure
+		return ResMsgFailure
 	}
 	delete(redisDataMap, key)
-	return redisMsgSuccess
+	return ResMsgSuccess
 }
 
 func redisINFO() string {
@@ -573,5 +573,5 @@ func redisCONFIG() string {
 }
 
 func redisSAVE() string {
-	return redisMsgOK
+	return ResMsgOK
 }

@@ -1,10 +1,23 @@
-package main
+package redis
 
 import (
+	"bufio"
 	"fmt"
+	"net"
 	"strconv"
 	"strings"
 )
+
+const bufferSize = 1024
+
+func readTCPPayload(conn *net.TCPConn) ([]byte, error) {
+	buffer := make([]byte, bufferSize)
+	_, err := bufio.NewReader(conn).Read(buffer)
+	if err != nil {
+		return nil, err
+	}
+	return buffer, nil
+}
 
 func parseRedisRawClientCmd2Strs(buffer []byte) []string {
 	cmdStr := string(buffer)
@@ -12,17 +25,17 @@ func parseRedisRawClientCmd2Strs(buffer []byte) []string {
 	return strs[:len(strs)-1]
 }
 
-func parseRedisClientCmd(strs []string) (*RedisCommand, error) {
+func parseRedisClientCmd(strs []string) (*Command, error) {
 	length, err := strconv.Atoi(strs[0][1:])
 	if err != nil {
 		return nil, err
 	}
-	cmd := RedisCommand{}
+	cmd := Command{}
 	if length <= 0 {
 		return &cmd, nil
 	}
 	cmd.Length = length
-	cmd.Cmd = RedisCmdType(strings.ToUpper(strs[2]))
+	cmd.Cmd = RedisCmd(strings.ToUpper(strs[2]))
 	for i := 3; i < len(strs); i = i + 2 {
 		cmd.Args = append(cmd.Args, strs[i+1])
 	}
@@ -30,7 +43,7 @@ func parseRedisClientCmd(strs []string) (*RedisCommand, error) {
 }
 
 func toRedisNil() string {
-	return "$-1" + redisNewLine
+	return "$-1" + ResNewLine
 }
 
 func toRedisInt(i int) string {

@@ -1,17 +1,15 @@
-package main
+package redis
 
 import (
 	"log"
 	"net"
-
-	"gorm.io/gorm"
 )
 
 const (
 	proto = "tcp"
 )
 
-func startServer(host string, db *gorm.DB) {
+func StartServer(host string, repo Repository) {
 	tcpAddr, err := net.ResolveTCPAddr(proto, host)
 	if err != nil {
 		log.Fatal(err)
@@ -29,6 +27,6 @@ func startServer(host string, db *gorm.DB) {
 		}
 		log.Printf("connection establised from %s\n", conn.RemoteAddr().String())
 
-		go handleConn(conn, db)
+		go handleConn(conn, repo)
 	}
 }
