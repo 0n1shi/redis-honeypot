@@ -61,6 +61,7 @@ func runServer(c *cli.Context) error {
 	if confPath == "" {
 		log.Fatalln("expected config file path")
 	}
+
 	conf, err := config.GetContent(confPath)
 	if err != nil {
 		log.Fatalf("error: %s\n", err.Error())
