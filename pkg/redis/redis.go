@@ -7,29 +7,31 @@ import (
 )
 
 const (
-	CmdCOMMAND = "COMMAND"
-	CmdPING    = "PING"
-	CmdKEYS    = "KEYS"
-	CmdSET     = "SET"
-	CmdGET     = "GET"
-	CmdDEL     = "DEL"
-	CmdINFO    = "INFO"
-	CmdCONFIG  = "CONFIG"
-	CmdSAVE    = "SAVE"
-	CmdQUIT    = "QUIT"
+	CmdCOMMAND  = "COMMAND"
+	CmdPING     = "PING"
+	CmdKEYS     = "KEYS"
+	CmdSET      = "SET"
+	CmdGET      = "GET"
+	CmdDEL      = "DEL"
+	CmdINFO     = "INFO"
+	CmdCONFIG   = "CONFIG"
+	CmdSAVE     = "SAVE"
+	CmdQUIT     = "QUIT"
+	CmdFLUSHALL = "FLUSHALL"
 )
 
 var implemenetedCmds = map[string](func(args []string) string){
-	CmdCOMMAND: redisCOMMAND,
-	CmdPING:    redisPING,
-	CmdKEYS:    redisKEYS,
-	CmdSET:     redisSET,
-	CmdGET:     redisGET,
-	CmdDEL:     redisDEL,
-	CmdINFO:    redisINFO,
-	CmdCONFIG:  redisCONFIG,
-	CmdSAVE:    redisSAVE,
-	CmdQUIT:    redisQUIT,
+	CmdCOMMAND:  redisCOMMAND,
+	CmdPING:     redisPING,
+	CmdKEYS:     redisKEYS,
+	CmdSET:      redisSET,
+	CmdGET:      redisGET,
+	CmdDEL:      redisDEL,
+	CmdINFO:     redisINFO,
+	CmdCONFIG:   redisCONFIG,
+	CmdSAVE:     redisSAVE,
+	CmdQUIT:     redisQUIT,
+	CmdFLUSHALL: redisFLUSHALL,
 }
 
 func IsImplemented(cmd string) bool {

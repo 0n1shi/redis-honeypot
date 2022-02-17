@@ -579,3 +579,7 @@ func redisSAVE(args []string) string {
 func redisQUIT(args []string) string {
 	return ResMsgOK
 }
+
+func redisFLUSHALL(args []string) string {
+	return ResMsgOK
+}
