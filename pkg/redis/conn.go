@@ -7,7 +7,6 @@ import (
 )
 
 func handleConn(conn *net.TCPConn, repo Repository) {
-	log.Printf("repo: %+v\n", repo)
 	defer handleConnClose(conn)
 
 	for {
