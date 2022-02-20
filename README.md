@@ -8,7 +8,7 @@ Beehive Redis is a honeypot which is a Redis server written in Golang.
 Some Redis commands are implemented. (e.g. `COMMAND`, `KEYS`, `GET` and so on)
 
 ```bash
-$ beehive-redis help
+beehive-redis help
 NAME:
    Redis server of Beehive honeypot series - TCP server which communicate in Redis protocol.
 
