@@ -31,8 +31,7 @@ GLOBAL OPTIONS:
 2. Make a config file like below.
 
 ```yaml
-redis:
-  port: 6379
+port: 6379
 mysql:
   host: 127.0.0.1
   user: beehive
