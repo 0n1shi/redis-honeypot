@@ -8,12 +8,8 @@ import (
 )
 
 type Conf struct {
-	Redis Redis `yaml:"redis"`
+	Port  int   `yaml:"port"`
 	MySQL MySQL `yaml:"mysql"`
-}
-
-type Redis struct {
-	Port int `yaml:"port"`
 }
 
 type MySQL struct {

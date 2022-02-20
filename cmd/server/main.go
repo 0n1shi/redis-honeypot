@@ -78,6 +78,6 @@ func runServer(c *cli.Context) error {
 	}
 
 	log.Println("starting Beehive Redis server ...")
-	redis.StartServer(fmt.Sprintf(":%d", conf.Redis.Port), repo)
+	redis.StartServer(fmt.Sprintf(":%d", conf.Port), repo)
 	return nil
 }
