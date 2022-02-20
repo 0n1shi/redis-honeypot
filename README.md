@@ -1,5 +1,8 @@
 # Beehive Redis
 
+![](https://img.shields.io/github/license/0n1shi/beehive-redis)
+![](https://img.shields.io/github/v/tag/0n1shi/beehive-redis)
+
 Beehive Redis is a honeypot which is a Redis server written in Golang.
 
 Some Redis commands are implemented. (e.g. `COMMAND`, `KEYS`, `GET` and so on)
