@@ -1,4 +1,4 @@
-module github.com/0n1shi/beehive-redis
+module github.com/0n1shi/redis-honeypot
 
 go 1.17
 

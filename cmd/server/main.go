@@ -7,9 +7,9 @@ import (
 
 	"github.com/urfave/cli"
 
-	"github.com/0n1shi/beehive-redis/cmd/server/config"
-	"github.com/0n1shi/beehive-redis/pkg/redis"
-	"github.com/0n1shi/beehive-redis/pkg/repository/mysql"
+	"github.com/0n1shi/redis-honeypot/cmd/server/config"
+	"github.com/0n1shi/redis-honeypot/pkg/redis"
+	"github.com/0n1shi/redis-honeypot/pkg/repository/mysql"
 )
 
 var (

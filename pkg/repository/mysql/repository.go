@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/0n1shi/beehive-redis/pkg/redis"
+	"github.com/0n1shi/redis-honeypot/pkg/redis"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

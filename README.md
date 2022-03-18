@@ -26,7 +26,7 @@ GLOBAL OPTIONS:
 
 ## Get started
 
-1. Get a linux binary from [Releases](https://github.com/0n1shi/beehive-redis/releases)
+1. Get a linux binary from [Releases](https://github.com/0n1shi/redis-honeypot/releases)
 
 2. Make a config file like below.
 
