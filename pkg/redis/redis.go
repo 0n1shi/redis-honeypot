@@ -18,6 +18,7 @@ const (
 	CmdSAVE     = "SAVE"
 	CmdQUIT     = "QUIT"
 	CmdFLUSHALL = "FLUSHALL"
+	CmdClient   = "CLIENT"
 )
 
 var implemenetedCmds = map[string](func(args []string) string){
@@ -32,6 +33,7 @@ var implemenetedCmds = map[string](func(args []string) string){
 	CmdSAVE:     redisSAVE,
 	CmdQUIT:     redisQUIT,
 	CmdFLUSHALL: redisFLUSHALL,
+	CmdClient:   redisCLIENT,
 }
 
 func IsImplemented(cmd string) bool {

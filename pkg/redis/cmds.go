@@ -583,3 +583,7 @@ func redisQUIT(args []string) string {
 func redisFLUSHALL(args []string) string {
 	return ResMsgOK
 }
+
+func redisCLIENT(args []string) string {
+	return toRedisStr("id=4 addr=172.27.0.1:61858 laddr=172.27.0.2:6379 fd=8 name= age=2 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=26 qbuf-free=40928 argv-mem=10 obl=0 oll=0 omem=0 tot-mem=61466 events=r cmd=client user=default redir=-1\n")
+}
