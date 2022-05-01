@@ -25,7 +25,7 @@ func redisKEYS(args []string) string {
 	for k := range redisDataMap {
 		keys = append(keys, k)
 	}
-	return toRedisStrArray(keys)
+	return toRedisArrayStr(keys)
 }
 
 func redisSET(args []string) string {
@@ -569,7 +569,7 @@ func redisCONFIG(args []string) string {
 		"oom-score-adj-values",
 		"0 200 800",
 	}
-	return toRedisStrArray(configs)
+	return toRedisArrayStr(configs)
 }
 
 func redisSAVE(args []string) string {
@@ -586,4 +586,11 @@ func redisFLUSHALL(args []string) string {
 
 func redisCLIENT(args []string) string {
 	return toRedisStr("id=4 addr=172.27.0.1:61858 laddr=172.27.0.2:6379 fd=8 name= age=2 idle=0 flags=N db=0 sub=0 psub=0 multi=-1 qbuf=26 qbuf-free=40928 argv-mem=10 obl=0 oll=0 omem=0 tot-mem=61466 events=r cmd=client user=default redir=-1\n")
+}
+
+func redisSLAVEOF(args []string) string {
+	if len(args) != 2 {
+		return toRedisErrors("ERR wrong number of arguments for 'slaveof' command")
+	}
+	return ResMsgOK
 }

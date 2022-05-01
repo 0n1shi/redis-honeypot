@@ -19,6 +19,7 @@ const (
 	CmdQUIT     = "QUIT"
 	CmdFLUSHALL = "FLUSHALL"
 	CmdClient   = "CLIENT"
+	CmdSLAVEOF  = "SLAVEOF"
 )
 
 var implemenetedCmds = map[string](func(args []string) string){
@@ -34,6 +35,7 @@ var implemenetedCmds = map[string](func(args []string) string){
 	CmdQUIT:     redisQUIT,
 	CmdFLUSHALL: redisFLUSHALL,
 	CmdClient:   redisCLIENT,
+	CmdSLAVEOF:  redisSLAVEOF,
 }
 
 func IsImplemented(cmd string) bool {
