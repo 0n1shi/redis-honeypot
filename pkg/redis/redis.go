@@ -20,6 +20,7 @@ const (
 	CmdFLUSHALL = "FLUSHALL"
 	CmdClient   = "CLIENT"
 	CmdSLAVEOF  = "SLAVEOF"
+	CmdAUTH     = "AUTH"
 )
 
 var implemenetedCmds = map[string](func(args []string) string){
@@ -36,6 +37,7 @@ var implemenetedCmds = map[string](func(args []string) string){
 	CmdFLUSHALL: redisFLUSHALL,
 	CmdClient:   redisCLIENT,
 	CmdSLAVEOF:  redisSLAVEOF,
+	CmdAUTH:     redisAUTH,
 }
 
 func IsImplemented(cmd string) bool {

@@ -594,3 +594,10 @@ func redisSLAVEOF(args []string) string {
 	}
 	return ResMsgOK
 }
+
+func redisAUTH(args []string) string {
+	if len(args) == 0 {
+		return toRedisErrors("ERR wrong number of arguments for 'auth' command")
+	}
+	return ResMsgOK
+}
