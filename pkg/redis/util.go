@@ -42,9 +42,9 @@ func parseStrsToClientCmd(strs []string) (*Command, error) {
 	return &cmd, nil
 }
 
-func toRedisInt(i int) string {
-	return fmt.Sprintf(":%d\r\n", i)
-}
+// func toRedisInt(i int) string {
+// 	return fmt.Sprintf(":%d\r\n", i)
+// }
 
 func toRedisStr(s string) string {
 	return fmt.Sprintf("$%d\r\n%s\r\n", len(s), s)
@@ -63,11 +63,11 @@ func toRedisArrayStr(strs []string) string {
 	return cmdStr
 }
 
-func toRedisArrayInt(ints []int) string {
-	dataLen := len(ints)
-	cmdStr := fmt.Sprintf("*%d\r\n", dataLen)
-	for _, i := range ints {
-		cmdStr += toRedisInt(i)
-	}
-	return cmdStr
-}
+// func toRedisArrayInt(ints []int) string {
+// 	dataLen := len(ints)
+// 	cmdStr := fmt.Sprintf("*%d\r\n", dataLen)
+// 	for _, i := range ints {
+// 		cmdStr += toRedisInt(i)
+// 	}
+// 	return cmdStr
+// }
