@@ -7,9 +7,10 @@ import (
 
 	"github.com/urfave/cli"
 
+	honeypot "github.com/0n1shi/redis-honeypot"
 	"github.com/0n1shi/redis-honeypot/cmd/server/config"
-	"github.com/0n1shi/redis-honeypot/pkg/redis"
-	"github.com/0n1shi/redis-honeypot/pkg/repository/mysql"
+	"github.com/0n1shi/redis-honeypot/repository/dummy"
+	"github.com/0n1shi/redis-honeypot/repository/mysql"
 )
 
 var (
@@ -67,17 +68,27 @@ func runServer(c *cli.Context) error {
 		log.Fatalf("error: %s\n", err.Error())
 	}
 
-	repo, err := mysql.NewMySQLRepository(&mysql.Conf{
-		Host:     conf.MySQL.Host,
-		User:     conf.MySQL.User,
-		Password: conf.MySQL.Password,
-		DB:       conf.MySQL.DB,
-	})
+	if !config.IsValidRepoType(conf.RepoType) {
+		log.Fatalf("Invalid repository type: %s\n", conf.RepoType)
+	}
+
+	var repo honeypot.Repository
+	if conf.RepoType == config.RepoTypeMySQL {
+		repo, err = mysql.NewMySQLRepository(&mysql.Conf{
+			Host:     conf.MySQL.Host,
+			User:     conf.MySQL.User,
+			Password: conf.MySQL.Password,
+			DB:       conf.MySQL.DB,
+		})
+	}
+	if conf.RepoType == config.RepoTypeDummy {
+		repo = dummy.NewDummyRepository()
+	}
 	if err != nil {
 		log.Fatalf("error: %s\n", err.Error())
 	}
 
 	log.Println("starting Beehive Redis server ...")
-	redis.StartServer(fmt.Sprintf(":%d", conf.Port), repo)
+	honeypot.StartServer(fmt.Sprintf(":%d", conf.Port), repo)
 	return nil
 }

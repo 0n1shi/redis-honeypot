@@ -1,4 +1,4 @@
-package redis
+package redishoneypot
 
 import (
 	"fmt"
@@ -49,7 +49,8 @@ type Command struct {
 	Length      int
 	Cmd         string
 	Args        []string
-	IP          string
+	IPFrom      string
+	IPTo        string
 	Implemented bool
 }
 
@@ -71,7 +72,8 @@ func getCmd(conn *net.TCPConn) (*Command, error) {
 	if err != nil {
 		return nil, err
 	}
-	cmd.IP = strings.Split(conn.RemoteAddr().String(), ":")[0]
+	cmd.IPFrom = strings.Split(conn.RemoteAddr().String(), ":")[0]
+	cmd.IPTo = strings.Split(conn.LocalAddr().String(), ":")[0]
 	cmd.Implemented = IsImplemented(cmd.Cmd)
 	return cmd, nil
 }

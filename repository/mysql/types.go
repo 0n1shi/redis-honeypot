@@ -16,7 +16,8 @@ type RedisCommand struct {
 	Length      int
 	Cmd         string
 	Args        string
-	IP          string
+	IPFrom      string
+	IPTo        string
 	Implemented bool
 }
 

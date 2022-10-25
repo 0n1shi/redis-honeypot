@@ -1,4 +1,4 @@
-package redis
+package redishoneypot
 
 import (
 	"io"
@@ -16,7 +16,7 @@ func handleConn(conn *net.TCPConn, repo Repository) {
 			break
 		}
 
-		log.Printf("received command \"%s\" from %s", cmd.ToString(), cmd.IP)
+		log.Printf("received command \"%s\" from %s", cmd.ToString(), cmd.IPFrom)
 		if err := repo.Save(cmd); err != nil {
 			log.Println(err)
 			break

@@ -8,9 +8,18 @@ import (
 )
 
 type Conf struct {
-	Port  int   `yaml:"port"`
-	MySQL MySQL `yaml:"mysql"`
+	Port     int      `yaml:"port"`
+	RepoType RepoType `yaml:"repo_type"`
+	MySQL    MySQL    `yaml:"mysql"`
+	Dummy    Dummy    `yaml:"dummy"`
 }
+
+type RepoType string
+
+const (
+	RepoTypeMySQL RepoType = "mysql"
+	RepoTypeDummy RepoType = "dummy"
+)
 
 type MySQL struct {
 	Host     string `yaml:"host"`
@@ -18,6 +27,8 @@ type MySQL struct {
 	Password string `yaml:"password"`
 	DB       string `yaml:"db"`
 }
+
+type Dummy struct{}
 
 func GetContent(filename string) (*Conf, error) {
 	data, err := ioutil.ReadFile(filename)
@@ -31,4 +42,8 @@ func GetContent(filename string) (*Conf, error) {
 	}
 
 	return &conf, nil
+}
+
+func IsValidRepoType(t RepoType) bool {
+	return t == RepoTypeMySQL || t == RepoTypeDummy
 }

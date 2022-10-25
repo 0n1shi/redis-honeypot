@@ -1,6 +1,8 @@
 port: 6379
+repo_type: mysql
 mysql:
   host: 127.0.0.1
   user: beehive
   password: beehive
   db: beehive
+dummy:

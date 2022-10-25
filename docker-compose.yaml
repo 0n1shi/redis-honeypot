@@ -1,11 +1,11 @@
+---
 version: '3'
 services:
   # for debug
-  redis:
-    image: "redis:latest"
-    ports:
-    - "6380:6379"
-  
+  # redis:
+  #   image: "redis:latest"
+  #   ports:
+  #     - "6380:6379"
   mysql:
     image: mysql:5.7
     environment:
@@ -15,7 +15,5 @@ services:
       MYSQL_PASSWORD: beehive
       TZ: 'Asia/Tokyo'
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    volumes:
-    - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
-    - 3306:3306
+      - 3306:3306
