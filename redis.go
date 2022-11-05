@@ -21,6 +21,7 @@ const (
 	CmdClient   = "CLIENT"
 	CmdSLAVEOF  = "SLAVEOF"
 	CmdAUTH     = "AUTH"
+	CmdHELP     = "HELP"
 )
 
 var implemenetedCmds = map[string](func(args []string) string){
@@ -38,6 +39,7 @@ var implemenetedCmds = map[string](func(args []string) string){
 	CmdClient:   redisCLIENT,
 	CmdSLAVEOF:  redisSLAVEOF,
 	CmdAUTH:     redisAUTH,
+	CmdHELP:     redisHELP,
 }
 
 func IsImplemented(cmd string) bool {

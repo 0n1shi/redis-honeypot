@@ -572,6 +572,23 @@ func redisCONFIG(args []string) string {
 	return toRedisArrayStr(configs)
 }
 
+func redisHELP(args []string) string {
+	helpText := []string{
+		"redis-cli 7.0.5",
+		"To get help about Redis commands type:",
+		"\"help @<group>\" to get a list of commands in <group>",
+		"\"help <command>\" for help on <command>",
+		"\"help <tab>\" to get a list of possible help topics",
+		"\"quit\" to exit",
+		"",
+		"To set redis-cli preferences:",
+		"\":set hints\" enable online hints",
+		"\":set nohints\" disable online hints",
+		"Set your preferences in ~/.redisclirc",
+	}
+	return toRedisArrayStr(helpText)
+}
+
 func redisSAVE(args []string) string {
 	return ResMsgOK
 }
